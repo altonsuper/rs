@@ -1,0 +1,32 @@
+{
+  "id": "kp-01",
+  "code": "KP-01",
+  "name": "RedDoorz Syariah dekat RS Sardjito",
+  "brand": "RedDoorz",
+  "city": "Yogyakarta",
+  "landmark": "RS Sardjito",
+  "area": "Jl. Monjali",
+  "walkMin": 6,
+  "price": 139000,
+  "priceCheckedAt": "2026-11-10",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": true,
+  "groupOk": false,
+  "invoice": true,
+  "lateCheckin": true,
+  "deposit": 0,
+  "good": [
+    "Air panas",
+    "Dapur bersama",
+    "Bisa tambah malam mendadak"
+  ],
+  "catch": "Sebagian kamar tanpa jendela. Bilang ke saya kalau mau yang berjendela, saya mintakan.",
+  "verdict": "Pilihan utama untuk pendamping pasien. Jalan kaki ke RS, jadi tidak perlu bayar parkir tiap bolak-balik.",
+  "verifiedAt": "2026-11-10",
+  "verifiedBy": "Andi",
+  "published": true,
+  "featured": true,
+  "order": 1
+}

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23E11D2E'/%3E%3Cpath d='M6 16l10-8 10 8M9 15v10h14V15' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Admin KamarPasti — kurasi kamar (tanpa database)</title>
+<style>
+  :root{--red:#E11D2E;--ink:#141821;--muted:#5B6472;--line:#E6E9EF;--bg:#F6F7FB;
+        --ok:#0E8A55;--ok-bg:#E8F6EF;--warn:#8A5B00;--warn-bg:#FFF6E5;--bad-bg:#FDECEE}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+  header{background:var(--ink);color:#fff;position:sticky;top:0;z-index:30}
+  .bar{display:flex;align-items:center;gap:10px;padding:11px 0;flex-wrap:wrap}
+  .logo{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
+  .dot{width:24px;height:24px;border-radius:7px;background:var(--red);display:grid;place-items:center}
+  .grow{flex:1}
+  .pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;background:#2A3140;color:#C6CCD8}
+  .pill.ok{background:#123527;color:#7EE2B8}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--red);color:#fff;
+    border:0;border-radius:10px;padding:10px 13px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn:hover{filter:brightness(.94)}
+  .btn.sm{padding:7px 10px;font-size:12px;border-radius:8px}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.dark{background:#2A3140;color:#fff}
+  .btn.ok{background:var(--ok)}
+  .btn.danger{background:#fff;color:var(--red);border:1px solid #FBD5D9}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .tabs{display:flex;gap:6px;padding:10px 0 0}
+  .tab{background:#EEF0F6;border:0;border-radius:9px 9px 0 0;padding:9px 14px;font-weight:700;font-size:13px;
+    color:var(--muted);cursor:pointer;font-family:inherit}
+  .tab.on{background:#fff;color:var(--ink)}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:14px;margin-bottom:20px}
+  .cols{display:grid;gap:14px}
+  @media(min-width:900px){.cols{grid-template-columns:minmax(320px,400px) 1fr}}
+  label{display:block;font-size:11.5px;font-weight:800;color:#39414F;margin:0 0 4px;text-transform:uppercase;letter-spacing:.3px}
+  input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:14px;
+    font-family:inherit;background:#fff;color:var(--ink)}
+  textarea{resize:vertical;min-height:62px;line-height:1.45}
+  input:focus,select:focus,textarea:focus{outline:2px solid #FBD5D9;border-color:var(--red)}
+  .f{margin-bottom:10px}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .hint{font-size:11px;color:var(--muted);margin-top:3px}
+  .toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .toolbar input[type=search]{flex:1;min-width:130px}
+  .fchip{font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:999px;background:#F2F4F8;border:1px solid var(--line);
+    color:#39414F;cursor:pointer;font-family:inherit}
+  .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .list{display:flex;flex-direction:column;gap:7px;max-height:70vh;overflow:auto}
+  .row{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:9px;background:#fff;cursor:pointer}
+  .row:hover{border-color:#C9CFDA}
+  .row.sel{border-color:var(--red);background:#FFF7F8}
+  .row.draft{background:#FAFBFD}
+  .mini{width:42px;height:42px;border-radius:8px;flex:0 0 auto;background:linear-gradient(135deg,#FFE3E6,#FFF3F4);
+    display:grid;place-items:center;overflow:hidden;font-size:10px;font-weight:800;color:var(--red)}
+  .mini img{width:100%;height:100%;object-fit:cover}
+  .rname{font-weight:700;font-size:13px;line-height:1.25}
+  .rmeta{font-size:11px;color:var(--muted)}
+  .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+  .t{font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:5px;background:#F2F4F8;color:#39414F}
+  .t.pub{background:var(--ok-bg);color:var(--ok)}
+  .t.dr{background:#EEF0F6;color:var(--muted)}
+  .t.st{background:var(--warn-bg);color:var(--warn)}
+  .t.ft{background:#FFF0F2;color:var(--red)}
+  .score{font-size:15px;font-weight:800;text-align:center;min-width:34px}
+  .score small{display:block;font-size:9px;font-weight:700;color:var(--muted)}
+  .ord{display:flex;flex-direction:column;gap:2px}
+  .ord button{border:1px solid var(--line);background:#fff;border-radius:5px;width:22px;height:17px;line-height:1;
+    cursor:pointer;font-size:9px;color:var(--muted);padding:0}
+  .ord button:hover{background:#F2F4F8}
+  .fieldset{border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:11px}
+  .legend{font-size:11.5px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.4px;margin-bottom:9px}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .ck{display:flex;gap:7px;align-items:center;font-size:12.5px;font-weight:600;background:#FAFBFD;border:1px solid var(--line);
+    border-radius:9px;padding:8px}
+  .ck input{width:16px;height:16px;flex:0 0 auto}
+  .switch{display:flex;gap:9px;align-items:center;background:#FAFBFD;border:1px solid var(--line);border-radius:10px;padding:10px;font-weight:700;font-size:13px}
+  .switch input{width:18px;height:18px}
+  .banner{border-radius:10px;padding:10px 12px;font-size:12.5px;margin-bottom:11px;display:flex;gap:9px;align-items:flex-start}
+  .banner.warn{background:var(--warn-bg);border:1px solid #F6E4BE;color:#6B4A08}
+  .banner.bad{background:var(--bad-bg);border:1px solid #FBD5D9;color:#8A1420}
+  .banner.ok{background:var(--ok-bg);border:1px solid #CDEBDD;color:#0B5F3C}
+  .banner.info{background:#F2F4F8;border:1px solid var(--line);color:#39414F}
+  .scorebox{display:flex;gap:12px;align-items:center;background:#FAFBFD;border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:11px}
+  .bigscore{font-size:30px;font-weight:800;letter-spacing:-1px;min-width:62px;text-align:center}
+  .bd{font-size:11.5px;color:var(--muted);display:grid;gap:2px}
+  .bd b{color:var(--ink)}
+  /* preview card (sama gaya dengan etalase) */
+  .pv{border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:330px;background:#fff}
+  .pv .tile{height:120px;background:linear-gradient(135deg,#FFE3E6,#FFF3F4);display:grid;place-items:center;position:relative}
+  .pv .tile img{width:100%;height:100%;object-fit:cover}
+  .pv .walk{position:absolute;left:9px;bottom:9px;background:rgba(20,24,33,.88);color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:999px}
+  .pv .bd2{padding:11px;display:grid;gap:7px}
+  .pv .ttl{font-weight:800;font-size:15px;line-height:1.3}
+  .pv .meta{font-size:11.5px;color:var(--muted)}
+  .pv .catch{font-size:12px;background:var(--warn-bg);border:1px solid #F6E4BE;border-radius:9px;padding:8px;color:#6B4A08}
+  .pv .price{font-size:17px;font-weight:800}
+  .pv .badges{display:flex;gap:4px;flex-wrap:wrap}
+  .pv .badge{font-size:10px;font-weight:700;padding:3px 6px;border-radius:5px;background:var(--ok-bg);color:var(--ok)}
+  .pv .badge.n{background:#F2F4F8;color:#39414F}
+  .pv .fake{background:var(--red);color:#fff;text-align:center;font-weight:700;font-size:13px;padding:11px;border-radius:10px}
+  pre{background:#141821;color:#E6E9EF;border-radius:10px;padding:11px;font-size:11px;overflow:auto;max-height:260px;
+     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  code{background:#F2F4F8;padding:1px 5px;border-radius:5px;font-size:12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:#fff;font-size:13px;
+    font-weight:600;padding:11px 15px;border-radius:10px;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.on{opacity:1}
+  h2{font-size:16px;margin:0 0 9px}
+  h3{font-size:13.5px;margin:14px 0 6px}
+  ol,ul{margin:6px 0 10px;padding-left:20px}
+  li{margin-bottom:5px}
+  .hide{display:none}
+  .sticky-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 0;display:flex;gap:7px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="logo"><span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span> Admin Kurasi</div>
+    <span class="pill" id="statTotal">0 kamar</span>
+    <span class="pill ok" id="statPub">0 tayang</span>
+    <span class="pill" id="statStale">0 perlu cek</span>
+    <span class="grow"></span>
+    <span class="pill" id="saveState">draft lokal</span>
+    <a class="btn sm ghost" href="index.html" target="_blank" rel="noopener">Buka etalase ↗</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab on" data-tab="kamar">Kamar</button>
+    <button class="tab" data-tab="setting">Pengaturan</button>
+    <button class="tab" data-tab="export">Export / Git</button>
+    <button class="tab" data-tab="help">Cara pakai</button>
+  </div>
+
+  <!-- ================= KAMAR ================= -->
+  <div class="panel" id="tab-kamar">
+    <div class="banner info" id="srcBanner">Memuat…</div>
+    <div class="cols">
+      <div>
+        <div class="toolbar">
+          <input type="search" id="q" placeholder="Cari nama / kode / patokan…">
+          <select id="sortBy" style="width:auto">
+            <option value="order">Urutan tayang</option>
+            <option value="score">Skor tertinggi</option>
+            <option value="price">Harga termurah</option>
+            <option value="walk">Jalan terdekat</option>
+            <option value="fresh">Verifikasi terbaru</option>
+          </select>
+        </div>
+        <div class="toolbar">
+          <button class="fchip on" data-f="all">Semua</button>
+          <button class="fchip" data-f="pub">Tayang</button>
+          <button class="fchip" data-f="draft">Draft</button>
+          <button class="fchip" data-f="stale">Perlu cek</button>
+          <button class="fchip" data-f="nophoto">Tanpa foto</button>
+        </div>
+        <div class="toolbar">
+          <button class="btn" id="addBtn">+ Tambah kamar</button>
+          <button class="btn ghost sm" id="reloadBtn">Muat ulang dari file</button>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
+
+      <div id="editorWrap">
+        <div class="empty" id="noSel" style="border:1px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted)">
+          Pilih kamar di kiri untuk mengubah, atau tap <b>+ Tambah kamar</b>.<br>
+          <span class="hint">Semua perubahan tersimpan otomatis di browser ini. Kalau sudah oke → tab <b>Export / Git</b>.</span>
+        </div>
+
+        <div id="editor" class="hide">
+          <div class="banner warn hide" id="gateBanner"></div>
+
+          <div class="scorebox">
+            <div><div class="bigscore" id="scoreNum">0</div><div class="hint" style="text-align:center">skor kelayakan</div></div>
+            <div class="bd" id="scoreBd"></div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">1 · Identitas</div>
+            <div class="f"><label>Nama properti (tampil di etalase)</label><input id="f_name" placeholder="RedDoorz dekat RS Sardjito"></div>
+            <div class="g3">
+              <div class="f"><label>Kode</label><input id="f_code" placeholder="KP-01"><div class="hint">dipakai di pesan WA</div></div>
+              <div class="f"><label>Merek</label><select id="f_brand">
+                <option>RedDoorz</option><option>KoolKost</option><option>Urbanview</option><option>SANS Hotel</option><option>Sunerra</option><option>Lainnya</option>
+              </select></div>
+              <div class="f"><label>Kota</label><input id="f_city" placeholder="Yogyakarta"></div>
+            </div>
+            <div class="g2">
+              <div class="f"><label>Patokan (jadi filter di etalase)</label><input id="f_landmark" placeholder="RS Sardjito"></div>
+              <div class="f"><label>Jalan / area</label><input id="f_area" placeholder="Jl. Monjali"></div>
+            </div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">2 · Yang dijual</div>
+            <div class="g3">
+              <div class="f"><label>Harga / malam</label><input id="f_price" type="number" min="0" step="1000" inputmode="numeric"></div>
+              <div class="f"><label>Harga dicek</label><input id="f_priceCheckedAt" type="date"></div>
+              <div class="f"><label>Jalan (menit)</label><input id="f_walkMin" type="number" min="0" max="120" inputmode="numeric"></div>
+            </div>
+            <div class="checks">
+              <label class="ck"><input type="checkbox" id="f_longStay"> Bisa menginap lama</label>
+              <label class="ck"><input type="checkbox" id="f_groupOk"> Bisa rombongan</label>
+              <label class="ck"><input type="checkbox" id="f_invoice"> Bisa invoice</label>
+              <label class="ck"><input type="checkbox" id="f_lateCheckin"> Check-in malam</label>
+            </div>
+            <div class="f" style="margin-top:9px"><label>Deposit tunai (0 kalau tidak ada)</label><input id="f_deposit" type="number" min="0" step="5000" inputmode="numeric">
+              <div class="hint">Wajib disebut kalau ada — ini sumber komplain nomor satu.</div></div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">3 · Bukti &amp; kejujuran (ini yang bikin dipercaya)</div>
+            <div class="f"><label>Kelebihan — pisahkan dengan koma</label><input id="f_good" placeholder="Air panas, Dapur bersama, Wi-Fi kencang"></div>
+            <div class="f"><label>⚠️ Kekurangan jujur (tampil di etalase)</label><textarea id="f_catch" placeholder="Sebagian kamar tanpa jendela. Minta yang berjendela saat booking."></textarea>
+              <div class="hint">Kosong = skor turun. Menulis minus di depan justru menaikkan pemesanan.</div></div>
+            <div class="f"><label>Putusan kami — cocok untuk siapa</label><textarea id="f_verdict" placeholder="Pilihan utama untuk pendamping pasien: jalan kaki, tidak perlu parkir."></textarea></div>
+            <div class="f"><label>Foto asli (dari HP kamu)</label>
+              <input type="file" id="f_photoFile" accept="image/*">
+              <div class="hint" id="photoInfo">Dikompres otomatis. Atau isi path/URL di bawah.</div>
+            </div>
+            <div class="f"><label>Path / URL foto</label><input id="f_photo" placeholder="assets/props/kp-01/cover.webp">
+              <div class="hint">Foto hasil unggahan disimpan di dalam JSON (praktis). Path bikin file lebih ringan.</div></div>
+            <div class="g2">
+              <div class="f"><label>Link peta (opsional)</label><input id="f_mapsUrl" placeholder="https://maps.app.goo.gl/…"></div>
+              <div class="f"><label>Link properti resmi (opsional)</label><input id="f_reddoorzUrl" placeholder="https://www.reddoorz.com/…"></div>
+            </div>
+            <div class="hint">Cukup tempel <b>link</b> peta. Jangan menyalin foto/ulasan Google Maps ke situs kamu.</div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">4 · Verifikasi</div>
+            <div class="g2">
+              <div class="f"><label>Terakhir diverifikasi</label><input id="f_verifiedAt" type="date"></div>
+              <div class="f"><label>Diverifikasi oleh</label><input id="f_verifiedBy" placeholder="Andi"></div>
+            </div>
+            <button class="btn ghost sm" id="touchBtn">✓ Saya baru cek hari ini</button>
+            <div class="hint">Lebih dari 30 hari = ditandai "perlu cek" dan skor turun.</div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">5 · Tayang</div>
+            <div class="checks" style="grid-template-columns:1fr">
+              <label class="switch"><input type="checkbox" id="f_published"> Tampilkan di halaman depan</label>
+              <label class="switch"><input type="checkbox" id="f_featured"> Jadikan "Pilihan Kami" (satu saja)</label>
+            </div>
+            <div class="f" style="margin-top:9px"><label>Nomor urut</label><input id="f_order" type="number" min="1" inputmode="numeric"></div>
+            <div class="f"><label>Catatan internal (TIDAK ikut ke file publik)</label><textarea id="f_notes" placeholder="Nama resepsionis, nomor telepon, kesepakatan dengan pemilik…"></textarea></div>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">Pratinjau kartu</div>
+            <div class="pv" id="pv"></div>
+          </div>
+
+          <div class="sticky-actions">
+            <button class="btn ok" id="saveBtn">Simpan</button>
+            <button class="btn ghost" id="dupBtn">Duplikat</button>
+            <button class="btn danger" id="delBtn">Hapus</button>
+            <button class="btn ghost" id="closeBtn">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SETTING ================= -->
+  <div class="panel hide" id="tab-setting">
+    <h2>Identitas etalase</h2>
+    <div class="banner warn">Nomor WhatsApp wajib diganti sebelum kamu menyebar link. Format <code>62…</code> tanpa tanda +.</div>
+    <div class="g2">
+      <div class="f"><label>Nama brand</label><input id="m_brand"></div>
+      <div class="f"><label>Nomor WhatsApp admin</label><input id="m_wa" placeholder="6281234567890"></div>
+    </div>
+    <div class="g2">
+      <div class="f"><label>Nama admin (tampil sebagai manusia)</label><input id="m_adminName"></div>
+      <div class="f"><label>Kota utama</label><input id="m_city"></div>
+    </div>
+    <div class="g2">
+      <div class="f"><label>Jam layanan</label><input id="m_hours"></div>
+      <div class="f"><label>Tagline</label><input id="m_tagline"></div>
+    </div>
+    <div class="f"><label>Janji garansi check-in</label><textarea id="m_promise"></textarea>
+      <div class="hint">Tulis janji yang benar-benar bisa kamu tepati. Jangan janjikan refund tanpa syarat kalau kamu tidak menanggungnya sendiri.</div></div>
+    <div class="f"><label>Disclaimer footer</label><textarea id="m_disclaimer"></textarea></div>
+    <button class="btn ok" id="saveMetaBtn">Simpan pengaturan</button>
+  </div>
+
+  <!-- ================= EXPORT ================= -->
+  <div class="panel hide" id="tab-export">
+    <h2>Git adalah database kamu</h2>
+    <div class="banner info">Listing disimpan di <code>assets/props/&lt;id&gt;/property.json</code>, metadata di <code>data/site.json</code>. <code>data/properties.json</code> adalah katalog gabungan untuk etalase. Setelah export admin, jalankan <code>node tools/build_catalog.js --sync-from-catalog</code>.</div>
+
+    <h3>1 · Export untuk situs (publik)</h3>
+    <p class="hint">Catatan internal <b>dibuang</b> otomatis. Foto yang diunggah ikut di dalam file (lihat ukuran di bawah).</p>
+    <div class="toolbar">
+      <button class="btn" id="dlBtn">⬇ Unduh properties.json</button>
+      <button class="btn ghost" id="copyBtn">Salin JSON</button>
+      <button class="btn ghost sm" id="backupBtn">Backup lengkap (dengan catatan internal)</button>
+    </div>
+    <div class="banner warn hide" id="sizeWarn"></div>
+    <pre id="jsonOut"></pre>
+
+    <h3>2 · Import</h3>
+    <div class="banner warn">Catatan internal tidak ikut di file publik. Kalau kamu import file publik, catatan internal hilang — simpan <b>Backup lengkap</b> untuk dirimu sendiri (jangan di-commit).</div>
+    <div class="toolbar">
+      <input type="file" id="importFile" accept=".json,application/json" style="max-width:260px">
+      <button class="btn ghost sm" id="importPasteBtn">Import dari teks di bawah</button>
+    </div>
+    <textarea id="importText" placeholder="Tempel isi properties.json di sini…" style="min-height:90px"></textarea>
+
+    <h3>3 · Alur kerja dari HP</h3>
+    <ol>
+      <li>Edit kamar di tab <b>Kamar</b> (tersimpan otomatis sebagai draft di browser).</li>
+      <li>Tap <b>Salin JSON</b>, lalu simpan hasil export sebagai <code>data/properties.json</code>.</li>
+      <li>Jalankan <code>node tools/build_catalog.js --sync-from-catalog</code> untuk memperbarui folder properti dan membuat ulang katalog publik.</li>
+      <li>Commit <code>data/site.json</code>, folder <code>assets/props/</code>, dan <code>data/properties.json</code>; hosting statis akan menampilkan hasilnya.</li>
+    </ol>
+    <div class="toolbar">
+      <button class="btn danger sm" id="resetBtn">Buang draft lokal &amp; muat ulang dari file</button>
+    </div>
+  </div>
+
+  <!-- ================= HELP ================= -->
+  <div class="panel hide" id="tab-help">
+    <h2>Kenapa tidak pakai scraper Google Maps</h2>
+    <ul>
+      <li><b>Datanya salah.</b> Google Maps tidak punya harga kamar &amp; ketersediaan RedDoorz. Yang ada cuma nama, alamat, rating, ulasan. Kamu tetap harus buka RedSeller untuk data yang benar-benar dijual.</li>
+      <li><b>Dilarang.</b> Ketentuan Google Maps Platform punya klausul <i>No Scraping</i> (3.2.3a) — dilarang mengekstrak/menyimpan konten Maps di luar layanan mereka.</li>
+      <li><b>Lebih mahal, bukan lebih murah.</b> 50 kamar × 3 menit = 2,5 jam sekali jalan. Scraper butuh dibangun, dirawat, dan pecah setiap kali tampilan berubah.</li>
+      <li><b>Yang paling berharga justru tidak bisa di-scrape:</b> jarak jalan kaki sebenarnya, kamar tanpa jendela, deposit tunai, jam check-in, nama resepsionis. Itu pengetahuan kamu — dan itu sebabnya orang memilih kamu.</li>
+    </ul>
+    <h3>Skor kelayakan (maks 100)</h3>
+    <ul>
+      <li>Verifikasi ≤30 hari: <b>25</b> · 31–60 hari: 12</li>
+      <li>Harga dicek ≤14 hari: <b>15</b> · ≤30 hari: 7</li>
+      <li>Ada foto asli: <b>15</b></li>
+      <li>Ada kekurangan jujur: <b>15</b></li>
+      <li>Ada putusan "cocok untuk siapa": <b>10</b></li>
+      <li>Jalan ≤10 menit: <b>10</b> · ≤15 menit: 5</li>
+      <li>Bisa menginap lama: <b>5</b> · Bisa invoice: <b>5</b></li>
+    </ul>
+    <p class="hint">Aturan praktis: tayangkan hanya yang skornya ≥ 60. Di bawah itu, kamu menjual sesuatu yang belum kamu kenal.</p>
+    <h3>Yang perlu kamu konfirmasi ke RedDoorz</h3>
+    <ul>
+      <li>Boleh menampilkan harga kisaran di situs sendiri? Boleh pakai foto sendiri dari properti?</li>
+      <li>Boleh markup, boleh sub-agen, boleh menerima uang tamu?</li>
+      <li>Boleh memakai kata "RedDoorz" di nama brand / domain?</li>
+    </ul>
+    <p class="hint">Simpan jawabannya tertulis. Ini bisnis kepercayaan — jangan bangun di atas asumsi.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Katalog cadangan supaya admin tetap terisi walau dibuka sebagai file lepas. -->
+<script id="seed" type="application/json">
+{"meta":{"brand":"KamarPasti","tagline":"Kamar yang sudah kami datangi. Bukan hasil copy-paste.","wa":"6281234567890","adminName":"Andi","city":"Yogyakarta","hours":"07.00–22.00 WIB","promise":"Kalau kamar yang kami konfirmasi tidak bisa dipakai, kami carikan pengganti setara atau bantu refund.","disclaimer":"Mitra reseller resmi program RedSeller RedDoorz. Bukan situs resmi RedDoorz.","updatedAt":"2026-11-13","seed":true},"properties":[{"id":"kp-01","code":"KP-01","name":"RedDoorz Syariah dekat RS Sardjito","brand":"RedDoorz","city":"Yogyakarta","landmark":"RS Sardjito","area":"Jl. Monjali","walkMin":6,"price":139000,"priceCheckedAt":"2026-11-10","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":false,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Air panas","Dapur bersama","Bisa tambah malam mendadak"],"catch":"Sebagian kamar tanpa jendela. Bilang ke saya kalau mau yang berjendela, saya mintakan.","verdict":"Pilihan utama untuk pendamping pasien. Jalan kaki ke RS, jadi tidak perlu bayar parkir tiap bolak-balik.","verifiedAt":"2026-11-10","verifiedBy":"Andi","published":true,"featured":true,"order":1,"notes":""},{"id":"kp-02","code":"KP-02","name":"KoolKost Syariah dekat UGM","brand":"KoolKost","city":"Yogyakarta","landmark":"Kampus UGM","area":"Pogung Kidul","walkMin":9,"price":115000,"priceCheckedAt":"2026-11-10","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Tarif bulanan","Laundry dekat","Wi-Fi kencang"],"catch":"Kamar mandi dalam tapi kecil. Parkir motor saja, tidak ada parkir mobil.","verdict":"Paling hemat untuk menginap 2 minggu sampai sebulan. Cocok mahasiswa baru atau tim kecil.","verifiedAt":"2026-11-10","verifiedBy":"Andi","published":true,"featured":false,"order":2,"notes":""},{"id":"kp-03","code":"KP-03","name":"RedDoorz Stasiun Tugu","brand":"RedDoorz","city":"Yogyakarta","landmark":"Stasiun Tugu","area":"Sosromenduran","walkMin":4,"price":159000,"priceCheckedAt":"2026-11-11","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":false,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":100000,"good":["Resepsionis 24 jam","Dekat Malioboro","Bisa rombongan"],"catch":"Ada deposit Rp 100rb tunai saat check-in, dikembalikan saat check-out. Kamar depan agak bising.","verdict":"Untuk transit kereta pagi atau rombongan yang butuh banyak kamar sekaligus.","verifiedAt":"2026-11-11","verifiedBy":"Andi","published":true,"featured":false,"order":3,"notes":""},{"id":"kp-04","code":"KP-04","name":"RedDoorz dekat RS Bethesda","brand":"RedDoorz","city":"Yogyakarta","landmark":"RS Bethesda","area":"Jl. Jenderal Sudirman","walkMin":7,"price":149000,"priceCheckedAt":"2026-11-09","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":false,"invoice":true,"lateCheckin":false,"deposit":0,"good":["Ada lift","Kamar keluarga","Air panas"],"catch":"Check-in hanya sampai jam 23.00. Kalau datang lewat tengah malam, harus lapor dulu.","verdict":"Untuk keluarga yang bawa orang tua — ada lift, jadi tidak perlu naik tangga.","verifiedAt":"2026-11-09","verifiedBy":"Andi","published":true,"featured":false,"order":4,"notes":""},{"id":"kp-05","code":"KP-05","name":"Urbanview dekat Ambarukmo Plaza","brand":"Urbanview","city":"Yogyakarta","landmark":"Ambarukmo Plaza","area":"Jl. Laksda Adisucipto","walkMin":5,"price":189000,"priceCheckedAt":"2026-11-08","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Kamar lebih luas","Parkir mobil","Sarapan bisa ditambah"],"catch":"Lebih mahal dari yang lain. Hanya saya tawarkan kalau tamu memang butuh kamar luas atau parkir mobil.","verdict":"Naik kelas sedikit untuk tamu kantor yang butuh invoice dan parkir mobil.","verifiedAt":"2026-11-08","verifiedBy":"Andi","published":true,"featured":false,"order":5,"notes":""}]}
+</script>
+
+<script>
+"use strict";
+const LS_KEY = "kp.catalog.v1";
+const STALE_DAYS = 30, PRICE_STALE = 14;
+const FALLBACK_META = {
+  brand:"Redseller AltonZ",
+  tagline:"Jualan Kamar hasil review.",
+  wa:"6285719177149",
+  adminName:"Alton",
+  city:"Indonesia",
+  hours:"07.00–22.00 WIB",
+  promise:"Memberikan pengalaman menginap di Reddorz, dengan Property Listing pilihan dan tersaring .",
+  disclaimer:"Mitra reseller resmi program RedSeller RedDoorz.",
+  updatedAt:"2026-11-13",
+  seed:true
+};
+const $ = s => document.querySelector(s);
+const rp = n => "Rp " + Math.round(Number(n)||0).toLocaleString("id-ID");
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const todayISO = () => new Date().toISOString().slice(0,10);
+const clone = o => JSON.parse(JSON.stringify(o));
+
+let DB = { meta:{}, properties:[] };
+let selId = null, lastDeleted = null, source = "—", filterMode = "all", dirty = false;
+
+/* ---------------- utils ---------------- */
+function daysSince(iso){
+  if(!iso) return 9999;
+  const d = new Date(iso+"T00:00:00");
+  if(isNaN(d)) return 9999;
+  return Math.floor((Date.now()-d.getTime())/86400000);
+}
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),2200);
+}
+function uid(){ return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function nextCode(){
+  let max=0;
+  DB.properties.forEach(p=>{ const m=/(\d+)\s*$/.exec(p.code||""); if(m) max=Math.max(max,parseInt(m[1],10)); });
+  return "KP-"+String(max+1).padStart(2,"0");
+}
+
+/* ---------------- skor kelayakan ---------------- */
+function scoreOf(p){
+  const parts=[]; let total=0;
+  const dv=daysSince(p.verifiedAt), dp=daysSince(p.priceCheckedAt);
+  const v = dv<=30?25:(dv<=60?12:0); parts.push(["Verifikasi "+(dv===9999?"belum ada":dv+" hari"),v,25]); total+=v;
+  const pr = dp<=PRICE_STALE?15:(dp<=30?7:0); parts.push(["Harga "+(dp===9999?"belum dicek":dp+" hari"),pr,15]); total+=pr;
+  const ph = p.photo?15:0; parts.push(["Foto asli",ph,15]); total+=ph;
+  const ca = (p.catch||"").trim().length>=12?15:0; parts.push(["Kekurangan jujur",ca,15]); total+=ca;
+  const ve = (p.verdict||"").trim().length>=12?10:0; parts.push(["Putusan kami",ve,10]); total+=ve;
+  const wk = (p.walkMin>0&&p.walkMin<=10)?10:((p.walkMin>0&&p.walkMin<=15)?5:0); parts.push(["Jalan kaki",wk,10]); total+=wk;
+  const ls = p.longStay?5:0; parts.push(["Menginap lama",ls,5]); total+=ls;
+  const iv = p.invoice?5:0; parts.push(["Invoice",iv,5]); total+=iv;
+  return {total,parts};
+}
+function isStale(p){ return daysSince(p.verifiedAt)>STALE_DAYS || daysSince(p.priceCheckedAt)>STALE_DAYS; }
+
+/* ---------------- persistence ---------------- */
+function persist(){
+  DB.meta.updatedAt = todayISO();
+  dirty = true;
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); $("#saveState").textContent="draft tersimpan"; }
+  catch(e){ $("#saveState").textContent="gagal simpan lokal"; }
+  renderStats(); renderJSON(); bannerSource();
+}
+async function loadFromSource(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){ const j=JSON.parse(raw); if(j&&Array.isArray(j.properties)){ DB=j; source="draft lokal di browser ini"; return; } }
+  }catch(e){}
+  try{
+    const r=await fetch("data/properties.json",{cache:"no-store"});
+    if(r.ok){ const j=await r.json(); if(j&&Array.isArray(j.properties)){ DB=j; source="data/properties.json"; return; } }
+  }catch(e){}
+  try{
+    const j=JSON.parse(document.getElementById("seed").textContent);
+    if(j&&Array.isArray(j.properties)){ j.meta=FALLBACK_META; DB=j; source="katalog cadangan di dalam file"; return; }
+  }catch(e){}
+  DB={meta:{brand:"KamarPasti",wa:"",adminName:"",city:"",hours:"",promise:"",disclaimer:"",tagline:""},properties:[]};
+  source="kosong";
+}
+
+/* ---------------- list ---------------- */
+function renderStats(){
+  const ps=DB.properties;
+  $("#statTotal").textContent = ps.length+" kamar";
+  $("#statPub").textContent = ps.filter(p=>p.published).length+" tayang";
+  $("#statStale").textContent = ps.filter(isStale).length+" perlu cek";
+}
+function visible(){
+  const q=($("#q").value||"").toLowerCase().trim();
+  let ps=DB.properties.filter(p=>{
+    if(filterMode==="pub"&&!p.published) return false;
+    if(filterMode==="draft"&&p.published) return false;
+    if(filterMode==="stale"&&!isStale(p)) return false;
+    if(filterMode==="nophoto"&&p.photo) return false;
+    if(!q) return true;
+    return [p.name,p.code,p.landmark,p.area,p.city,p.brand].join(" ").toLowerCase().includes(q);
+  });
+  const s=$("#sortBy").value;
+  const cmp={
+    order:(a,b)=>(a.order||99)-(b.order||99),
+    score:(a,b)=>scoreOf(b).total-scoreOf(a).total,
+    price:(a,b)=>(a.price||0)-(b.price||0),
+    walk:(a,b)=>(a.walkMin||999)-(b.walkMin||999),
+    fresh:(a,b)=>daysSince(a.verifiedAt)-daysSince(b.verifiedAt)
+  }[s];
+  return ps.sort(cmp);
+}
+function renderList(){
+  const ps=visible();
+  if(!ps.length){ $("#list").innerHTML='<div class="banner info">Tidak ada kamar yang cocok dengan filter ini.</div>'; return; }
+  $("#list").innerHTML = ps.map(p=>{
+    const sc=scoreOf(p).total;
+    const col = sc>=60?"var(--ok)":(sc>=40?"var(--warn)":"var(--red)");
+    const thumb = p.photo ? '<img src="'+esc(p.photo)+'" alt="">' : esc((p.code||"?").replace(/^KP-/,""));
+    return '<div class="row'+(p.id===selId?" sel":"")+(p.published?"":" draft")+'" data-id="'+esc(p.id)+'">'+
+      '<div class="ord"><button data-mv="up" data-id="'+esc(p.id)+'" title="naik">▲</button><button data-mv="down" data-id="'+esc(p.id)+'" title="turun">▼</button></div>'+
+      '<div class="mini">'+thumb+'</div>'+
+      '<div style="flex:1;min-width:0"><div class="rname">'+esc(p.name||"(tanpa nama)")+'</div>'+
+      '<div class="rmeta">'+esc(p.code||"—")+' · '+esc(p.landmark||"—")+' · '+rp(p.price)+'</div>'+
+      '<div class="tags">'+
+        (p.published?'<span class="t pub">TAYANG</span>':'<span class="t dr">DRAFT</span>')+
+        (p.featured?'<span class="t ft">PILIHAN</span>':'')+
+        (isStale(p)?'<span class="t st">PERLU CEK</span>':'')+
+        (p.photo?'':'<span class="t">TANPA FOTO</span>')+
+      '</div></div>'+
+      '<div class="score" style="color:'+col+'">'+sc+'<small>skor</small></div>'+
+    '</div>';
+  }).join("");
+  $("#list").querySelectorAll(".row").forEach(r=>{
+    r.addEventListener("click",e=>{ if(e.target.closest("[data-mv]")) return; select(r.dataset.id); });
+  });
+  $("#list").querySelectorAll("[data-mv]").forEach(b=>{
+    b.addEventListener("click",e=>{ e.stopPropagation(); move(b.dataset.id, b.dataset.mv); });
+  });
+}
+function move(id,dir){
+  const ps=DB.properties.slice().sort((a,b)=>(a.order||99)-(b.order||99));
+  const i=ps.findIndex(p=>p.id===id); if(i<0) return;
+  const j=dir==="up"?i-1:i+1; if(j<0||j>=ps.length) return;
+  const a=ps[i],b=ps[j];
+  const ao=a.order||i+1, bo=b.order||j+1;
+  a.order=bo; b.order=ao;
+  if(a.order===b.order){ a.order=bo+(dir==="up"?-0.5:0.5); }
+  ps.sort((x,y)=>(x.order||99)-(y.order||99)).forEach((p,k)=>p.order=k+1);
+  persist(); renderList(); toast("Urutan diubah");
+}
+
+/* ---------------- editor ---------------- */
+const FIELDS=["name","code","brand","city","landmark","area","price","priceCheckedAt","walkMin","deposit",
+  "good","catch","verdict","photo","mapsUrl","reddoorzUrl","verifiedAt","verifiedBy","order","notes"];
+const BOOLS=["longStay","groupOk","invoice","lateCheckin","published","featured"];
+
+function blank(){
+  return {id:uid(),code:nextCode(),name:"",brand:"RedDoorz",city:DB.meta.city||"",landmark:"",area:"",
+    walkMin:0,price:0,priceCheckedAt:todayISO(),mapsUrl:"",reddoorzUrl:"",photo:"",
+    longStay:false,groupOk:false,invoice:false,lateCheckin:false,deposit:0,good:[],catch:"",verdict:"",
+    verifiedAt:"",verifiedBy:DB.meta.adminName||"",published:false,featured:false,
+    order:DB.properties.length+1,notes:""};
+}
+function select(id){
+  const p=DB.properties.find(x=>x.id===id); if(!p) return;
+  selId=id;
+  $("#noSel").classList.add("hide"); $("#editor").classList.remove("hide");
+  FIELDS.forEach(f=>{
+    const el=$("#f_"+f); if(!el) return;
+    el.value = f==="good" ? (p.good||[]).join(", ") : (p[f]==null?"":p[f]);
+  });
+  BOOLS.forEach(f=>{ $("#f_"+f).checked=!!p[f]; });
+  $("#photoInfo").textContent = p.photo && p.photo.startsWith("data:")
+    ? "Foto tersimpan di JSON (±"+Math.round(p.photo.length*0.75/1024)+" KB)."
+    : "Dikompres otomatis. Atau isi path/URL di bawah.";
+  renderList(); renderEditorExtras();
+  $("#editor").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function readForm(){
+  const p = DB.properties.find(x=>x.id===selId) || blank();
+  FIELDS.forEach(f=>{
+    const el=$("#f_"+f); if(!el) return;
+    if(f==="good") p.good = el.value.split(",").map(s=>s.trim()).filter(Boolean);
+    else if(["price","walkMin","deposit","order"].includes(f)) p[f]=Number(el.value)||0;
+    else p[f]=el.value.trim();
+  });
+  BOOLS.forEach(f=>{ p[f]=$("#f_"+f).checked; });
+  return p;
+}
+function renderEditorExtras(){
+  const p=readForm();
+  const s=scoreOf(p);
+  $("#scoreNum").textContent=s.total;
+  $("#scoreNum").style.color = s.total>=60?"var(--ok)":(s.total>=40?"var(--warn)":"var(--red)");
+  $("#scoreBd").innerHTML=s.parts.map(([n,v,m])=>'<div>'+(v>0?"✅":"⬜")+' '+esc(n)+' — <b>'+v+'/'+m+'</b></div>').join("");
+
+  const problems=[];
+  if(!p.name.trim()) problems.push("nama belum diisi");
+  if(!p.price) problems.push("harga belum diisi");
+  if(!p.verifiedAt) problems.push("belum pernah diverifikasi");
+  if(!p.catch.trim()) problems.push("kekurangan jujur masih kosong");
+  if(!p.photo) problems.push("belum ada foto asli");
+  if(isStale(p)) problems.push("verifikasi/harga sudah lebih dari "+STALE_DAYS+" hari");
+  const gb=$("#gateBanner");
+  if(p.published && problems.length){
+    gb.className="banner bad"; gb.innerHTML="⛔ <span><b>Tayang tapi belum layak:</b> "+esc(problems.join(", "))+". Lengkapi dulu — ini yang menjaga kepercayaan tamu.</span>";
+  } else if(problems.length){
+    gb.className="banner warn"; gb.innerHTML="⚠️ <span><b>Belum lengkap:</b> "+esc(problems.join(", "))+".</span>";
+  } else {
+    gb.className="banner ok"; gb.innerHTML="✅ <span>Layak tayang. Skor "+s.total+"/100.</span>";
+  }
+
+  const badges=[];
+  if(p.longStay) badges.push('<span class="badge">Bisa menginap lama</span>');
+  if(p.groupOk) badges.push('<span class="badge">Bisa rombongan</span>');
+  if(p.invoice) badges.push('<span class="badge n">Invoice</span>');
+  if(p.lateCheckin) badges.push('<span class="badge n">Check-in malam</span>');
+  (p.good||[]).slice(0,3).forEach(g=>badges.push('<span class="badge n">'+esc(g)+'</span>'));
+  const tile = p.photo
+    ? '<img src="'+esc(p.photo)+'" alt="">'
+    : '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#E11D2E" stroke-width="1.5" opacity=".55" stroke-linecap="round"><path d="M3 18v-6a2 2 0 012-2h14a2 2 0 012 2v6"/><path d="M3 18h18"/><path d="M7 10V7h6v3"/></svg>';
+  $("#pv").innerHTML =
+    '<div class="tile">'+tile+(p.walkMin?'<span class="walk">👣 '+p.walkMin+' menit jalan</span>':'')+'</div>'+
+    '<div class="bd2">'+
+      '<div><div class="ttl">'+esc(p.name||"(nama properti)")+'</div><div class="meta">'+esc(p.area||"area")+' · '+esc(p.landmark||"patokan")+'</div></div>'+
+      '<div class="badges">'+badges.join("")+'</div>'+
+      (p.catch?'<div class="catch">⚠️ '+esc(p.catch)+'</div>':'')+
+      (p.verdict?'<div style="font-size:12.5px">'+esc(p.verdict)+'</div>':'')+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="price">'+rp(p.price)+'<span style="font-size:11px;color:var(--muted)">/malam</span></span>'+
+      '<span style="font-size:11px;font-weight:700;color:var(--ok)">✅ '+esc(p.verifiedAt||"belum dicek")+'</span></div>'+
+      '<div class="fake">Tanya kamar ini</div>'+
+    '</div>';
+}
+function save(){
+  if(!selId) return;
+  const p=readForm();
+  const i=DB.properties.findIndex(x=>x.id===selId);
+  if(i>=0) DB.properties[i]=p; else DB.properties.push(p);
+  if(p.featured) DB.properties.forEach(x=>{ if(x.id!==p.id) x.featured=false; });
+  persist(); renderList(); renderEditorExtras(); toast("Tersimpan di draft ✓");
+}
+function addNew(){
+  const p=blank(); DB.properties.push(p); persist(); select(p.id); toast("Kamar baru — lengkapi dulu");
+}
+function duplicate(){
+  if(!selId) return;
+  const p=clone(readForm()); p.id=uid(); p.code=nextCode(); p.name=p.name+" (salinan)";
+  p.published=false; p.featured=false; p.order=DB.properties.length+1;
+  DB.properties.push(p); persist(); select(p.id); toast("Diduplikat sebagai draft");
+}
+function del(){
+  if(!selId) return;
+  const p=DB.properties.find(x=>x.id===selId); if(!p) return;
+  if(!confirm('Hapus "'+(p.name||p.code)+'" dari katalog?\n\nBisa diurungkan lewat tombol yang muncul setelah ini.')) return;
+  lastDeleted={p:clone(p),i:DB.properties.findIndex(x=>x.id===selId)};
+  DB.properties=DB.properties.filter(x=>x.id!==selId);
+  selId=null; $("#editor").classList.add("hide"); $("#noSel").classList.remove("hide");
+  persist(); renderList();
+  const b=$("#srcBanner"); b.className="banner warn";
+  b.innerHTML='🗑️ <span>"'+esc(p.name||p.code)+'" dihapus. <button class="btn sm ghost" id="undoBtn">Urungkan</button></span>';
+  $("#undoBtn").addEventListener("click",()=>{
+    if(!lastDeleted) return;
+    DB.properties.splice(Math.min(lastDeleted.i,DB.properties.length),0,lastDeleted.p);
+    lastDeleted=null; persist(); renderList(); bannerSource(); toast("Dikembalikan ✓");
+  });
+}
+
+/* ---------------- photo ---------------- */
+async function handlePhoto(file){
+  if(!file) return;
+  const bmp = await createImageBitmap(file).catch(()=>null);
+  let dataUrl;
+  if(bmp){
+    const maxW=800, scale=Math.min(1,maxW/bmp.width);
+    const c=document.createElement("canvas");
+    c.width=Math.round(bmp.width*scale); c.height=Math.round(bmp.height*scale);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    dataUrl=c.toDataURL("image/webp",0.72);
+    if(!dataUrl.startsWith("data:image/webp")) dataUrl=c.toDataURL("image/jpeg",0.72);
+  } else {
+    dataUrl = await new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); });
+  }
+  $("#f_photo").value=dataUrl;
+  const kb=Math.round(dataUrl.length*0.75/1024);
+  $("#photoInfo").textContent="Foto siap · ±"+kb+" KB"+(kb>120?" — besar, sebaiknya pakai file terpisah":"");
+  renderEditorExtras(); toast("Foto dikompres ±"+kb+" KB");
+}
+
+/* ---------------- export / import ---------------- */
+function publicDB(){
+  const d=clone(DB);
+  d.properties.forEach(p=>{ delete p.notes; });
+  d.meta.updatedAt=todayISO();
+  return d;
+}
+function renderJSON(){
+  const txt=JSON.stringify(publicDB(),null,2);
+  $("#jsonOut").textContent=txt;
+  const kb=Math.round(new Blob([txt]).size/1024);
+  const w=$("#sizeWarn");
+  if(kb>1500){ w.className="banner bad"; w.innerHTML="⛔ File ±"+kb+" KB. Terlalu berat untuk HP. Pindahkan foto ke <code>assets/props/</code> dan isi path, bukan unggah."; }
+  else if(kb>600){ w.className="banner warn"; w.innerHTML="⚠️ File ±"+kb+" KB. Masih jalan, tapi pertimbangkan foto sebagai file terpisah."; }
+  else { w.className="banner info"; w.innerHTML="Ukuran ±"+kb+" KB — ringan, aman untuk katalog foto-embedded."; }
+}
+function download(name,obj){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
+function adoptJSON(j,label){
+  if(!j||!Array.isArray(j.properties)) { toast("Bukan format katalog yang benar"); return false; }
+  j.properties.forEach((p,i)=>{ if(!p.id) p.id=uid(); if(!p.order) p.order=i+1; });
+  DB=j; selId=null; $("#editor").classList.add("hide"); $("#noSel").classList.remove("hide");
+  persist(); paintMeta(); renderList(); bannerSource(label); toast("Katalog dimuat ✓"); return true;
+}
+function bannerSource(label){
+  if(label) source = label;
+  const b=$("#srcBanner");
+  b.className = dirty ? "banner warn" : "banner info";
+  b.innerHTML = (dirty?"✏️":"📂") + ' <span>Sumber: <b>'+esc(source)+'</b>. ' +
+    (dirty ? '<b>Ada perubahan yang belum di-commit</b> — export lalu commit ke Git supaya tayang permanen.'
+           : 'Belum ada perubahan lokal.') + '</span>';
+}
+
+/* ---------------- meta ---------------- */
+const METAS=["brand","wa","adminName","city","hours","tagline","promise","disclaimer"];
+function paintMeta(){ METAS.forEach(k=>{ const el=$("#m_"+k); if(el) el.value=DB.meta[k]||""; }); }
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));
+    ["kamar","setting","export","help"].forEach(n=>$("#tab-"+n).classList.toggle("hide",n!==t.dataset.tab));
+    if(t.dataset.tab==="export") renderJSON();
+  });
+});
+
+/* ---------------- init ---------------- */
+(async function init(){
+  await loadFromSource();
+  paintMeta(); renderStats(); renderList(); renderJSON(); bannerSource();
+
+  $("#q").addEventListener("input",renderList);
+  $("#sortBy").addEventListener("change",renderList);
+  document.querySelectorAll(".fchip").forEach(c=>c.addEventListener("click",()=>{
+    filterMode=c.dataset.f;
+    document.querySelectorAll(".fchip").forEach(x=>x.classList.toggle("on",x===c));
+    renderList();
+  }));
+  $("#addBtn").addEventListener("click",addNew);
+  $("#saveBtn").addEventListener("click",save);
+  $("#dupBtn").addEventListener("click",duplicate);
+  $("#delBtn").addEventListener("click",del);
+  $("#closeBtn").addEventListener("click",()=>{ selId=null; $("#editor").classList.add("hide"); $("#noSel").classList.remove("hide"); renderList(); });
+  $("#touchBtn").addEventListener("click",()=>{
+    $("#f_verifiedAt").value=todayISO(); $("#f_priceCheckedAt").value=todayISO();
+    if(!$("#f_verifiedBy").value) $("#f_verifiedBy").value=DB.meta.adminName||"";
+    renderEditorExtras(); toast("Tanggal verifikasi diperbarui — jangan lupa Simpan");
+  });
+  $("#f_photoFile").addEventListener("change",e=>handlePhoto(e.target.files[0]));
+  FIELDS.concat(BOOLS).forEach(f=>{
+    const el=$("#f_"+f); if(!el) return;
+    el.addEventListener("input",renderEditorExtras);
+    el.addEventListener("change",renderEditorExtras);
+  });
+  $("#saveMetaBtn").addEventListener("click",()=>{
+    METAS.forEach(k=>{ DB.meta[k]=$("#m_"+k).value.trim(); });
+    persist(); toast("Pengaturan tersimpan ✓");
+  });
+  $("#dlBtn").addEventListener("click",()=>{ download("properties.json",publicDB()); toast("properties.json diunduh"); });
+  $("#backupBtn").addEventListener("click",()=>{ download("kamarpasti-backup-"+todayISO()+".json",DB); toast("Backup lengkap diunduh (jangan di-commit)"); });
+  $("#copyBtn").addEventListener("click",async()=>{
+    const txt=JSON.stringify(publicDB(),null,2);
+    try{ await navigator.clipboard.writeText(txt); toast("JSON disalin — tempel ke GitHub"); }
+    catch(e){
+      const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); toast("JSON disalin"); }catch(_){ toast("Tidak bisa menyalin — pakai Unduh"); }
+      ta.remove();
+    }
+  });
+  $("#importFile").addEventListener("change",async e=>{
+    const f=e.target.files[0]; if(!f) return;
+    try{ adoptJSON(JSON.parse(await f.text()),"file "+f.name); }catch(err){ toast("File JSON tidak valid"); }
+  });
+  $("#importPasteBtn").addEventListener("click",()=>{
+    try{ adoptJSON(JSON.parse($("#importText").value),"teks yang ditempel"); }catch(err){ toast("Teks bukan JSON valid"); }
+  });
+  $("#reloadBtn").addEventListener("click",async()=>{
+    if(!confirm("Buang draft di browser ini dan muat ulang dari data/properties.json?")) return;
+    try{ localStorage.removeItem(LS_KEY); }catch(e){}
+    await loadFromSource(); paintMeta(); renderStats(); renderList(); renderJSON(); bannerSource(); toast("Dimuat ulang");
+  });
+  $("#resetBtn").addEventListener("click",()=>$("#reloadBtn").click());
+})();
+</script>
+</body>
+</html>

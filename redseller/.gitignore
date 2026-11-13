@@ -1,0 +1,19 @@
+# Sensitive Data & Credentials
+*.env
+.env.local
+credentials.json
+secrets.yaml
+
+# Financial / Local Data (Based on your screenshot)
+stay-ledger.xlsx
+*.xlsx
+data/local-*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Node/Python (If you add them later)
+node_modules/
+__pycache__/
+venv/

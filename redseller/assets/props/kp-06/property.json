@@ -1,0 +1,31 @@
+{
+  "id": "kp-06",
+  "code": "KP-06",
+  "name": "RedDoorz dekat Kampus UNY",
+  "brand": "RedDoorz",
+  "city": "Yogyakarta",
+  "landmark": "Kampus UNY",
+  "area": "Gejayan",
+  "walkMin": 11,
+  "price": 125000,
+  "priceCheckedAt": "2026-10-02",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": true,
+  "groupOk": true,
+  "invoice": false,
+  "lateCheckin": true,
+  "deposit": 0,
+  "good": [
+    "Murah",
+    "Banyak kamar kosong"
+  ],
+  "catch": "Belum saya datangi ulang. Harga terakhir dicek lebih dari sebulan lalu.",
+  "verdict": "Cadangan kalau yang lain penuh.",
+  "verifiedAt": "2026-10-02",
+  "verifiedBy": "Andi",
+  "published": false,
+  "featured": false,
+  "order": 6
+}

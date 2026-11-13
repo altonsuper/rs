@@ -1,0 +1,32 @@
+{
+  "id": "kp-05",
+  "code": "KP-05",
+  "name": "Urbanview dekat Ambarukmo Plaza",
+  "brand": "Urbanview",
+  "city": "Yogyakarta",
+  "landmark": "Ambarukmo Plaza",
+  "area": "Jl. Laksda Adisucipto",
+  "walkMin": 5,
+  "price": 189000,
+  "priceCheckedAt": "2026-11-08",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": true,
+  "groupOk": true,
+  "invoice": true,
+  "lateCheckin": true,
+  "deposit": 0,
+  "good": [
+    "Kamar lebih luas",
+    "Parkir mobil",
+    "Sarapan bisa ditambah"
+  ],
+  "catch": "Lebih mahal dari yang lain. Hanya saya tawarkan kalau tamu memang butuh kamar luas atau parkir mobil.",
+  "verdict": "Naik kelas sedikit untuk tamu kantor yang butuh invoice dan parkir mobil.",
+  "verifiedAt": "2026-11-08",
+  "verifiedBy": "Andi",
+  "published": true,
+  "featured": false,
+  "order": 5
+}

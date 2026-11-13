@@ -1,0 +1,32 @@
+{
+  "id": "kp-02",
+  "code": "KP-02",
+  "name": "KoolKost Syariah dekat UGM",
+  "brand": "KoolKost",
+  "city": "Yogyakarta",
+  "landmark": "Kampus UGM",
+  "area": "Pogung Kidul",
+  "walkMin": 9,
+  "price": 115000,
+  "priceCheckedAt": "2026-11-10",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": true,
+  "groupOk": true,
+  "invoice": true,
+  "lateCheckin": true,
+  "deposit": 0,
+  "good": [
+    "Tarif bulanan",
+    "Laundry dekat",
+    "Wi-Fi kencang"
+  ],
+  "catch": "Kamar mandi dalam tapi kecil. Parkir motor saja, tidak ada parkir mobil.",
+  "verdict": "Paling hemat untuk menginap 2 minggu sampai sebulan. Cocok mahasiswa baru atau tim kecil.",
+  "verifiedAt": "2026-11-10",
+  "verifiedBy": "Andi",
+  "published": true,
+  "featured": false,
+  "order": 2
+}

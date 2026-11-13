@@ -1,0 +1,32 @@
+{
+  "id": "kp-03",
+  "code": "KP-03",
+  "name": "RedDoorz Stasiun Tugu",
+  "brand": "RedDoorz",
+  "city": "Yogyakarta",
+  "landmark": "Stasiun Tugu",
+  "area": "Sosromenduran",
+  "walkMin": 4,
+  "price": 159000,
+  "priceCheckedAt": "2026-11-11",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": false,
+  "groupOk": true,
+  "invoice": true,
+  "lateCheckin": true,
+  "deposit": 100000,
+  "good": [
+    "Resepsionis 24 jam",
+    "Dekat Malioboro",
+    "Bisa rombongan"
+  ],
+  "catch": "Ada deposit Rp 100rb tunai saat check-in, dikembalikan saat check-out. Kamar depan agak bising.",
+  "verdict": "Untuk transit kereta pagi atau rombongan yang butuh banyak kamar sekaligus.",
+  "verifiedAt": "2026-11-11",
+  "verifiedBy": "Andi",
+  "published": true,
+  "featured": false,
+  "order": 3
+}

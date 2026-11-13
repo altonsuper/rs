@@ -1,0 +1,32 @@
+{
+  "id": "kp-04",
+  "code": "KP-04",
+  "name": "RedDoorz dekat RS Bethesda",
+  "brand": "RedDoorz",
+  "city": "Yogyakarta",
+  "landmark": "RS Bethesda",
+  "area": "Jl. Jenderal Sudirman",
+  "walkMin": 7,
+  "price": 149000,
+  "priceCheckedAt": "2026-11-09",
+  "mapsUrl": "",
+  "reddoorzUrl": "",
+  "photo": "",
+  "longStay": true,
+  "groupOk": false,
+  "invoice": true,
+  "lateCheckin": false,
+  "deposit": 0,
+  "good": [
+    "Ada lift",
+    "Kamar keluarga",
+    "Air panas"
+  ],
+  "catch": "Check-in hanya sampai jam 23.00. Kalau datang lewat tengah malam, harus lapor dulu.",
+  "verdict": "Untuk keluarga yang bawa orang tua — ada lift, jadi tidak perlu naik tangga.",
+  "verifiedAt": "2026-11-09",
+  "verifiedBy": "Andi",
+  "published": true,
+  "featured": false,
+  "order": 4
+}

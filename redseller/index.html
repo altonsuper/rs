@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23E11D2E'/%3E%3Cpath d='M6 16l10-8 10 8M9 15v10h14V15' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Redseller AltonZ — Jualan Kamar hasil review.</title>
+<meta name="description" content="Jualan Kamar hasil review. Memberikan pengalaman menginap di Reddorz, dengan Property Listing pilihan dan tersaring.">
+<style>
+  :root{
+    --red:#E11D2E; --red-dark:#B3121F; --ink:#141821; --muted:#5B6472;
+    --line:#E6E9EF; --bg:#F6F7FB; --ok:#0E8A55; --ok-bg:#E8F6EF; --warn:#8A5B00; --warn-bg:#FFF6E5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px}
+  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  .bar{display:flex;align-items:center;gap:10px;padding:10px 0}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.3px;font-size:18px}
+  .dot{width:26px;height:26px;border-radius:7px;background:var(--red);display:grid;place-items:center;flex:0 0 auto}
+  .grow{flex:1}
+  .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ok);
+    background:var(--ok-bg);border:1px solid #CDEBDD;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .av{width:18px;height:18px;border-radius:50%;background:var(--ok);color:#fff;font-size:10px;display:grid;place-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;
+    font-weight:700;border:0;border-radius:12px;padding:13px 16px;font-size:15px;cursor:pointer;text-decoration:none;width:100%;font-family:inherit}
+  .btn:hover{background:var(--red-dark)}
+  .btn.sm{width:auto;padding:9px 13px;font-size:13px;border-radius:10px}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{background:#F2F4F8}
+  section{margin:18px 0}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+  h1{font-size:26px;line-height:1.2;margin:14px 0 8px;letter-spacing:-.6px}
+  h2{font-size:18px;margin:0 0 10px;letter-spacing:-.3px}
+  p{margin:0 0 10px}
+  .sub{color:var(--muted);font-size:15px}
+  .note{font-size:11.5px;color:var(--muted)}
+  .hero{padding:16px 0 0}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.8px;color:var(--red);text-transform:uppercase;margin:0 0 6px}
+  .proof{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .pf{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;background:#fff;
+    border:1px solid var(--line);border-radius:999px;padding:6px 10px}
+  .chips{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-size:12.5px;font-weight:700;padding:9px 13px;border-radius:999px;background:#fff;
+    border:1px solid var(--line);color:#39414F;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.ls.on{background:var(--ok);border-color:var(--ok)}
+  .count{font-size:12px;color:var(--muted);margin:0 0 10px}
+  /* featured */
+  .feat{background:linear-gradient(135deg,#fff,#FFF7F8);border:1px solid #FBD5D9;border-radius:18px;padding:16px;position:relative;overflow:hidden}
+  .feat .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#fff;background:var(--red);padding:4px 9px;border-radius:999px;letter-spacing:.2px}
+  .feat h3{font-size:20px;margin:10px 0 4px;letter-spacing:-.4px}
+  /* cards */
+  .shelf{display:grid;gap:12px}
+  .prop{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .tile{height:132px;position:relative;background:linear-gradient(135deg,#FFE3E6,#FFF3F4);display:grid;place-items:center}
+  .tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .tile .ph{opacity:.55}
+  .walk{position:absolute;left:10px;bottom:10px;background:rgba(20,24,33,.88);color:#fff;font-size:11.5px;
+    font-weight:700;padding:5px 9px;border-radius:999px;display:flex;align-items:center;gap:5px}
+  .brandtag{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.94);color:var(--ink);
+    font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:7px}
+  .body{padding:13px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .ttl{font-size:16px;font-weight:800;letter-spacing:-.3px;line-height:1.3}
+  .meta{font-size:12px;color:var(--muted)}
+  .badges{display:flex;flex-wrap:wrap;gap:5px}
+  .badge{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--ok-bg);color:var(--ok)}
+  .badge.n{background:#F2F4F8;color:#39414F}
+  .catch{font-size:12.5px;background:var(--warn-bg);border:1px solid #F6E4BE;border-radius:10px;padding:9px;color:#6B4A08}
+  .verdict{font-size:13px;color:#39414F}
+  .prow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:auto;padding-top:4px}
+  .price{font-size:18px;font-weight:800;letter-spacing:-.4px}
+  .price span{font-size:11.5px;font-weight:600;color:var(--muted)}
+  .vf{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ok)}
+  .vf.stale{color:var(--warn)}
+  .help{background:linear-gradient(135deg,#141821,#2A3140);color:#fff;border:0}
+  .help .sub{color:#C6CCD8}
+  .guar{display:grid;gap:9px}
+  .g{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+  .steps{counter-reset:s;display:grid;gap:10px}
+  .step{display:flex;gap:11px;align-items:flex-start;font-size:13.5px}
+  .num{counter-increment:s;flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;
+    font-size:12.5px;font-weight:800;display:grid;place-items:center}
+  .num::before{content:counter(s)}
+  footer{padding:22px 0 96px;font-size:11.5px;color:var(--muted)}
+  .sticky{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);
+    border-top:1px solid var(--line);padding:10px 16px;backdrop-filter:blur(6px)}
+  .sticky .wrap{padding:0;display:flex;gap:9px;align-items:center}
+  .sticky .who2{font-size:11px;color:var(--muted);line-height:1.25;flex:0 0 auto;max-width:96px}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:20px;text-align:center;color:var(--muted);font-size:13.5px}
+  @media(min-width:660px){
+    h1{font-size:32px}
+    .shelf{grid-template-columns:1fr 1fr}
+    .guar{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="logo">
+      <span class="dot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+      <span data-brand>KamarPasti</span>
+    </div>
+    <span class="grow"></span>
+    <span class="who"><span class="av" data-initial>A</span><span data-admin>Andi</span></span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Listing pilihan · <span data-city>Indonesia</span></p>
+    <h1><span data-tagline>Jualan Kamar hasil review.</span></h1>
+    <p class="sub" data-promise>Memberikan pengalaman menginap di Reddorz, dengan Property Listing pilihan dan tersaring.</p>
+    <p class="sub">Lihat informasi listing di bawah, lalu tanyakan detailnya lewat WhatsApp.</p>
+    <div class="proof">
+      <span class="pf">🕒 Jam layanan <b data-hours>07.00–22.00 WIB</b></span>
+      <span class="pf">👤 Admin <b data-admin2>Alton</b></span>
+    </div>
+    <p class="note" style="margin-top:12px">Pilih listing yang sesuai untuk mengirim pertanyaan melalui WhatsApp.</p>
+  </div>
+
+  <section id="featured"></section>
+
+  <section>
+    <h2 style="margin-bottom:6px">Pilih berdasarkan patokan</h2>
+    <div class="chips" id="chips"></div>
+    <p class="count" id="count"></p>
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <section class="card help">
+    <h2 style="color:#fff">Ada pertanyaan tentang listing?</h2>
+    <p class="sub">Hubungi <span data-admin3>Alton</span> melalui WhatsApp untuk menanyakan detail listing.</p>
+    <button class="btn" id="helpBtn" style="background:#fff;color:var(--ink)">Tanya lewat WhatsApp</button>
+  </section>
+
+  <section class="card">
+    <h2>Informasi di setiap listing</h2>
+    <div class="guar">
+      <div class="g"><span>📍</span><span><b>Lokasi dan patokan.</b> Area, landmark, dan jarak jalan kaki ditampilkan jika tersedia.</span></div>
+      <div class="g"><span>🛏️</span><span><b>Detail properti.</b> Fasilitas, catatan, dan informasi lain mengikuti data tiap listing.</span></div>
+      <div class="g"><span>💬</span><span><b>Hubungi admin.</b> Tanyakan detail listing melalui WhatsApp pada jam layanan.</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Cara kerjanya</h2>
+    <div class="steps">
+      <div class="step"><span class="num"></span><span><b>Pilih listing</b> untuk membuka pesan WhatsApp berisi nama dan kode properti.</span></div>
+      <div class="step"><span class="num"></span><span><b>Tanyakan detailnya</b> kepada admin melalui WhatsApp.</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Hubungi kami</h2>
+    <p class="sub" style="font-size:14px">WhatsApp admin tersedia setiap <span data-hours>07.00–22.00 WIB</span>.</p>
+    <button class="btn ghost" id="partnerBtn">Hubungi lewat WhatsApp</button>
+  </section>
+
+  <footer>
+    <p><b data-brand2>KamarPasti</b> — <span data-disclaimer></span></p>
+    <p>Data katalog diperbarui <span data-updated-at>2026-11-13</span>. Jam layanan <span data-hours></span>. © <span id="yr"></span> <span data-brand3>KamarPasti</span>.</p>
+  </footer>
+</div>
+
+<div class="sticky">
+  <div class="wrap">
+    <span class="who2">Admin<br><b data-admin4>Alton</b></span>
+    <button class="btn" id="chatBtn">Chat via WhatsApp</button>
+  </div>
+</div>
+
+<!-- Katalog cadangan: dipakai kalau data/properties.json tidak bisa diambil
+     (mis. dibuka sebagai file lepas). Sumber utama tetap data/properties.json di Git. -->
+<script id="seed" type="application/json">
+{"meta":{"brand":"KamarPasti","tagline":"Kamar yang sudah kami datangi. Bukan hasil copy-paste.","wa":"6281234567890","adminName":"Andi","city":"Yogyakarta","hours":"07.00–22.00 WIB","promise":"Kalau kamar yang kami konfirmasi tidak bisa dipakai, kami carikan pengganti setara atau bantu refund.","disclaimer":"Mitra reseller resmi program RedSeller RedDoorz. Bukan situs resmi RedDoorz.","updatedAt":"2026-11-13","seed":true},"properties":[{"id":"kp-01","code":"KP-01","name":"RedDoorz Syariah dekat RS Sardjito","brand":"RedDoorz","city":"Yogyakarta","landmark":"RS Sardjito","area":"Jl. Monjali","walkMin":6,"price":139000,"priceCheckedAt":"2026-11-10","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":false,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Air panas","Dapur bersama","Bisa tambah malam mendadak"],"catch":"Sebagian kamar tanpa jendela. Bilang ke saya kalau mau yang berjendela, saya mintakan.","verdict":"Pilihan utama untuk pendamping pasien. Jalan kaki ke RS, jadi tidak perlu bayar parkir tiap bolak-balik.","verifiedAt":"2026-11-10","verifiedBy":"Andi","published":true,"featured":true,"order":1,"notes":""},{"id":"kp-02","code":"KP-02","name":"KoolKost Syariah dekat UGM","brand":"KoolKost","city":"Yogyakarta","landmark":"Kampus UGM","area":"Pogung Kidul","walkMin":9,"price":115000,"priceCheckedAt":"2026-11-10","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Tarif bulanan","Laundry dekat","Wi-Fi kencang"],"catch":"Kamar mandi dalam tapi kecil. Parkir motor saja, tidak ada parkir mobil.","verdict":"Paling hemat untuk menginap 2 minggu sampai sebulan. Cocok mahasiswa baru atau tim kecil.","verifiedAt":"2026-11-10","verifiedBy":"Andi","published":true,"featured":false,"order":2,"notes":""},{"id":"kp-03","code":"KP-03","name":"RedDoorz Stasiun Tugu","brand":"RedDoorz","city":"Yogyakarta","landmark":"Stasiun Tugu","area":"Sosromenduran","walkMin":4,"price":159000,"priceCheckedAt":"2026-11-11","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":false,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":100000,"good":["Resepsionis 24 jam","Dekat Malioboro","Bisa rombongan"],"catch":"Ada deposit Rp 100rb tunai saat check-in, dikembalikan saat check-out. Kamar depan agak bising.","verdict":"Untuk transit kereta pagi atau rombongan yang butuh banyak kamar sekaligus.","verifiedAt":"2026-11-11","verifiedBy":"Andi","published":true,"featured":false,"order":3,"notes":""},{"id":"kp-04","code":"KP-04","name":"RedDoorz dekat RS Bethesda","brand":"RedDoorz","city":"Yogyakarta","landmark":"RS Bethesda","area":"Jl. Jenderal Sudirman","walkMin":7,"price":149000,"priceCheckedAt":"2026-11-09","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":false,"invoice":true,"lateCheckin":false,"deposit":0,"good":["Ada lift","Kamar keluarga","Air panas"],"catch":"Check-in hanya sampai jam 23.00. Kalau datang lewat tengah malam, harus lapor dulu.","verdict":"Untuk keluarga yang bawa orang tua — ada lift, jadi tidak perlu naik tangga.","verifiedAt":"2026-11-09","verifiedBy":"Andi","published":true,"featured":false,"order":4,"notes":""},{"id":"kp-05","code":"KP-05","name":"Urbanview dekat Ambarukmo Plaza","brand":"Urbanview","city":"Yogyakarta","landmark":"Ambarukmo Plaza","area":"Jl. Laksda Adisucipto","walkMin":5,"price":189000,"priceCheckedAt":"2026-11-08","mapsUrl":"","reddoorzUrl":"","photo":"","longStay":true,"groupOk":true,"invoice":true,"lateCheckin":true,"deposit":0,"good":["Kamar lebih luas","Parkir mobil","Sarapan bisa ditambah"],"catch":"Lebih mahal dari yang lain. Hanya saya tawarkan kalau tamu memang butuh kamar luas atau parkir mobil.","verdict":"Naik kelas sedikit untuk tamu kantor yang butuh invoice dan parkir mobil.","verifiedAt":"2026-11-08","verifiedBy":"Andi","published":true,"featured":false,"order":5,"notes":""}]}
+</script>
+
+<script>
+"use strict";
+const LS_KEY = "kp.catalog.v1";
+const FALLBACK_META = {
+  brand:"Redseller AltonZ",
+  tagline:"Jualan Kamar hasil review.",
+  wa:"6285719177149",
+  adminName:"Alton",
+  city:"Indonesia",
+  hours:"07.00–22.00 WIB",
+  promise:"Memberikan pengalaman menginap di Reddorz, dengan Property Listing pilihan dan tersaring .",
+  disclaimer:"Mitra reseller resmi program RedSeller RedDoorz.",
+  updatedAt:"2026-11-13",
+  seed:true
+};
+const $ = s => document.querySelector(s);
+const rp = n => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const STALE_DAYS = 30;
+
+let CAT = null;
+let fromDraft = false;
+let filter = { landmark: "", longStay: false };
+
+/* ---------- sumber data: localStorage (draft dari admin) → properties.json → seed ---------- */
+async function loadCatalog(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) { const j = JSON.parse(raw); if (j && Array.isArray(j.properties) && j.properties.length) { fromDraft = true; return j; } }
+  } catch(e){}
+  try {
+    const r = await fetch("data/properties.json", { cache: "no-store" });
+    if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.properties)) return j; }
+  } catch(e){}
+  try {
+    const j = JSON.parse(document.getElementById("seed").textContent);
+    if (j && Array.isArray(j.properties)) { j.meta = FALLBACK_META; return j; }
+  }
+  catch(e){ return { meta:{}, properties:[] }; }
+  return { meta:{}, properties:[] };
+}
+
+function daysSince(iso){
+  if (!iso) return 9999;
+  const d = new Date(iso + "T00:00:00");
+  if (isNaN(d)) return 9999;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+function fmtDate(iso){
+  if (!iso) return "—";
+  const d = new Date(iso + "T00:00:00");
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString("id-ID", { day:"numeric", month:"short" });
+}
+
+/* ---------- pesan WhatsApp: tanpa form, tanpa ketik ---------- */
+function waLink(text){
+  const num = String((CAT.meta && CAT.meta.wa) || "").replace(/[^0-9]/g,"");
+  return "https://wa.me/" + num + "?text=" + encodeURIComponent(text);
+}
+function openWA(text){
+  const url = waLink(text);
+  const w = window.open(url, "_blank");
+  if (!w) location.href = url;
+}
+function msgFor(p){
+  const a = (CAT.meta && CAT.meta.adminName) || "admin";
+  let m = "Halo " + a + ", saya lihat *" + p.name + "* (" + p.code + ") di " + (CAT.meta.brand || "KamarPasti") + ".\n" +
+          "Boleh dibantu cek kamar ini?";
+  if (filter.longStay) m += "\nSaya butuh menginap lama (7 malam atau lebih).";
+  if (p.landmark) m += "\nPatokan: " + p.landmark + ".";
+  return m + "\nSRC:WEB-" + p.code;
+}
+function msgHelp(){
+  const a = (CAT.meta && CAT.meta.adminName) || "admin";
+  const c = (CAT.meta && CAT.meta.city) || "kota saya";
+  let m = "Halo " + a + ", saya ingin bertanya tentang listing di " + c + ".";
+  if (filter.longStay) m += "\nSaya butuh menginap lama (7 malam atau lebih).";
+  if (filter.landmark) m += "\nPatokan: " + filter.landmark + ".";
+  return m + "\nSRC:WEB-BANTU";
+}
+
+/* ---------- render ---------- */
+function tile(p, big){
+  const walk = p.walkMin ? '<span class="walk">👣 ' + p.walkMin + ' menit jalan</span>' : "";
+  const bt = p.brand ? '<span class="brandtag">' + esc(p.brand) + '</span>' : "";
+  if (p.photo) return '<div class="tile" style="height:' + (big?170:132) + 'px"><img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" loading="lazy">' + walk + bt + '</div>';
+  return '<div class="tile" style="height:' + (big?170:132) + 'px">' +
+    '<svg class="ph" width="' + (big?72:58) + '" height="' + (big?72:58) + '" viewBox="0 0 24 24" fill="none" stroke="#E11D2E" stroke-width="1.5" stroke-linecap="round">' +
+    '<path d="M3 18v-6a2 2 0 012-2h14a2 2 0 012 2v6"/><path d="M3 18h18"/><path d="M7 10V7h6v3"/><circle cx="17" cy="8" r="1.6"/></svg>' +
+    walk + bt + '</div>';
+}
+function badges(p){
+  const out = [];
+  if (p.longStay) out.push('<span class="badge">Bisa menginap lama</span>');
+  if (p.groupOk) out.push('<span class="badge">Bisa rombongan</span>');
+  if (p.invoice) out.push('<span class="badge n">Invoice</span>');
+  if (p.lateCheckin) out.push('<span class="badge n">Check-in malam</span>');
+  (p.good || []).slice(0,3).forEach(g => out.push('<span class="badge n">' + esc(g) + '</span>'));
+  return out.join("");
+}
+function verified(p){
+  const stale = daysSince(p.verifiedAt) > STALE_DAYS;
+  return '<span class="vf' + (stale?" stale":"") + '">' + (stale?"⚠️":"✅") + ' Dicek ' + fmtDate(p.verifiedAt) +
+         (p.verifiedBy ? ' · ' + esc(p.verifiedBy) : '') + '</span>';
+}
+function cardHTML(p){
+  return '<article class="prop">' + tile(p,false) +
+    '<div class="body">' +
+      '<div><div class="ttl">' + esc(p.name) + '</div>' +
+      '<div class="meta">' + esc(p.area || "") + (p.area && p.landmark ? " · " : "") + esc(p.landmark || "") + '</div></div>' +
+      '<div class="badges">' + badges(p) + '</div>' +
+      (p.catch ? '<div class="catch">⚠️ ' + esc(p.catch) + '</div>' : '') +
+      (p.verdict ? '<div class="verdict">' + esc(p.verdict) + '</div>' : '') +
+      (p.deposit ? '<div class="note">Deposit tunai ' + rp(p.deposit) + ' saat check-in (dikembalikan).</div>' : '') +
+      '<div class="prow"><span class="price">' + rp(p.price) + '<span>/malam</span></span>' + verified(p) + '</div>' +
+      '<div class="note">Harga dicek ' + fmtDate(p.priceCheckedAt) + ' · final dikonfirmasi di chat</div>' +
+      '<button class="btn" data-wa="' + esc(p.id) + '">Tanya kamar ini</button>' +
+      (p.mapsUrl ? '<a class="btn ghost sm" href="' + esc(p.mapsUrl) + '" target="_blank" rel="noopener">Lihat lokasi di peta</a>' : '') +
+    '</div></article>';
+}
+function featuredHTML(p){
+  return '<div class="feat">' +
+    '<span class="tag">⭐ PILIHAN KAMI</span>' +
+    '<h3>' + esc(p.name) + '</h3>' +
+    '<div class="meta" style="margin-bottom:10px">' + esc(p.area || "") + ' · 👣 ' + (p.walkMin||"?") + ' menit ke ' + esc(p.landmark||"") + '</div>' +
+    (p.verdict ? '<p style="font-size:14px">' + esc(p.verdict) + '</p>' : '') +
+    (p.catch ? '<div class="catch" style="margin-bottom:12px">⚠️ ' + esc(p.catch) + '</div>' : '') +
+    '<div class="prow" style="margin-bottom:12px"><span class="price">' + rp(p.price) + '<span>/malam</span></span>' + verified(p) + '</div>' +
+    '<button class="btn" data-wa="' + esc(p.id) + '">Tanya kamar ini — 1 tap</button>' +
+    '</div>';
+}
+
+function published(){
+  return (CAT.properties || []).filter(p => p.published)
+    .sort((a,b) => (a.order||99) - (b.order||99));
+}
+function render(){
+  const all = published();
+  const feat = all.find(p => p.featured);
+  $("#featured").innerHTML = (feat && !filter.landmark && !filter.longStay) ? featuredHTML(feat) : "";
+
+  let list = all.filter(p => !(feat && !filter.landmark && !filter.longStay && p.id === feat.id));
+  if (filter.landmark) list = list.filter(p => p.landmark === filter.landmark);
+  if (filter.longStay) list = list.filter(p => p.longStay);
+
+  $("#count").textContent = list.length
+    ? list.length + " kamar terkurasi" + (filter.landmark ? " dekat " + filter.landmark : "") + (filter.longStay ? " · bisa menginap lama" : "")
+    : "";
+  $("#shelf").innerHTML = list.length ? list.map(cardHTML).join("")
+    : '<div class="empty">Belum ada kamar yang cocok dengan filter ini.<br>Tap <b>Minta dipilihkan</b> di bawah — saya carikan yang belum masuk daftar.</div>';
+
+  document.querySelectorAll("[data-wa]").forEach(b => {
+    b.addEventListener("click", () => {
+      const p = (CAT.properties||[]).find(x => x.id === b.dataset.wa);
+      if (p) openWA(msgFor(p));
+    });
+  });
+}
+function renderChips(){
+  const all = published();
+  const marks = [...new Set(all.map(p => p.landmark).filter(Boolean))];
+  let h = '<button class="chip' + (!filter.landmark?" on":"") + '" data-lm="">Semua</button>';
+  marks.forEach(m => { h += '<button class="chip' + (filter.landmark===m?" on":"") + '" data-lm="' + esc(m) + '">' + esc(m) + '</button>'; });
+  h += '<button class="chip ls' + (filter.longStay?" on":"") + '" data-ls="1">🌙 Menginap lama</button>';
+  $("#chips").innerHTML = h;
+  document.querySelectorAll("#chips .chip").forEach(c => {
+    c.addEventListener("click", () => {
+      if (c.dataset.ls) filter.longStay = !filter.longStay;
+      else filter.landmark = c.dataset.lm;
+      renderChips(); render();
+    });
+  });
+}
+
+function paintMeta(){
+  const m = CAT.meta || {};
+  const set = (sel, val) => document.querySelectorAll(sel).forEach(e => e.textContent = val);
+  set("[data-brand]", m.brand || "KamarPasti");
+  set("[data-brand2]", m.brand || "KamarPasti");
+  set("[data-brand3]", m.brand || "KamarPasti");
+  set("[data-tagline]", m.tagline || "");
+  set("[data-city]", m.city || "");
+  set("[data-admin]", m.adminName || "admin");
+  set("[data-admin2]", m.adminName || "admin");
+  set("[data-admin3]", m.adminName || "admin");
+  set("[data-admin4]", m.adminName || "admin");
+  set("[data-initial]", (m.adminName || "A").trim().charAt(0).toUpperCase());
+  set("[data-promise]", m.promise || "");
+  set("[data-disclaimer]", m.disclaimer || "");
+  set("[data-hours]", m.hours || "");
+  set("[data-updated-at]", m.updatedAt || "—");
+  document.title = (m.brand || "Redseller") + " — " + (m.tagline || "Listing pilihan");
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = [m.tagline, m.promise].filter(Boolean).join(" ");
+  $("#yr").textContent = new Date().getFullYear();
+}
+
+(async function init(){
+  CAT = await loadCatalog();
+  paintMeta(); renderChips(); render();
+  if (fromDraft) {
+    const b = document.createElement("div");
+    b.style.cssText = "background:#FFF6E5;border-bottom:1px solid #F6E4BE;color:#6B4A08;font-size:12px;padding:8px 16px;text-align:center;font-weight:600";
+    b.innerHTML = '🛠️ Mode pratinjau: menampilkan draft dari admin di browser ini (belum di-commit). <a href="admin.html" style="color:#6B4A08;text-decoration:underline">Buka admin</a>';
+    document.body.insertBefore(b, document.body.firstChild);
+  }
+  $("#helpBtn").addEventListener("click", () => openWA(msgHelp()));
+  $("#chatBtn").addEventListener("click", () => openWA(msgHelp()));
+  $("#partnerBtn").addEventListener("click", () => openWA(msgHelp()));
+})();
+</script>
+</body>
+</html>
